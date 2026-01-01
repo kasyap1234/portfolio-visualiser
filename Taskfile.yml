@@ -1,0 +1,52 @@
+version: '3'
+
+tasks:
+  # Backend Tasks
+  backend:build:
+    desc: Build the Go backend
+    cmds:
+      - cd backend && go build -o ../bin/server ./cmd/server
+
+  backend:dev:
+    desc: Run the backend in development mode (with air if installed)
+    cmds:
+      - cd backend && air
+
+  backend:test:
+    desc: Run backend tests
+    cmds:
+      - cd backend && go test ./...
+
+  # Frontend Tasks
+  frontend:dev:
+    desc: Run the SvelteKit frontend in dev mode
+    cmds:
+      - cd client && npm run dev
+
+  frontend:build:
+    desc: Build the SvelteKit frontend
+    cmds:
+      - cd client && npm run build
+
+  # Infrastructure Tasks
+  infra:up:
+    desc: Start infrastructure (database, etc.)
+    cmds:
+      - docker compose -f deployments/docker-compose.yml up -d
+
+  infra:down:
+    desc: Stop infrastructure
+    cmds:
+      - docker compose -f deployments/docker-compose.yml down
+
+  # Project Setup
+  init:
+    desc: Initialize the project (install dependencies)
+    cmds:
+      - cd backend && go mod tidy
+      - cd client && npm install
+
+  default:
+    desc: List all tasks
+    cmds:
+      - task --list
